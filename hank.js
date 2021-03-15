@@ -94,7 +94,7 @@ client.on('message', message => {
 });
 
 //function to send daily HNK everyday when it's 20:00
-//and also works to ping the bot every 1 minute so it doesnt sleep
+//and also works to ping the bot every 1 minute so it doesnt sleep, funtion somewhat relegated to dont_sleep for better consistency
 function HNK(){
     let curDate = new Date();
     let time = curDate.getHours() + ":" + curDate.getMinutes();
@@ -111,9 +111,13 @@ function HNK(){
             }
         })
     }
-    console.log(time);
 }
-setInterval(HNK,60000);//plays HNK() every one minute
+setInterval(HNK,60000);//plays HNK() every 1 minutes
+
+function dont_sleep(){
+    1+1;
+}
+setInterval(dont_sleep,1000);//plays dont_sleep every second, so the bot doesnt sleep
 
 
 client.login(config.tokenID);
