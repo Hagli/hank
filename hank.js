@@ -21,7 +21,9 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-    console.log(`${message.author.username}#${message.author.id} says "${message}" in ${message.channel.name}`);//logs the message, only works properly on text messages
+    if (message.content.startsWith(`${config.prefix}`)||(message.author.id===config.botID)){
+        console.log(`${message.author.username}#${message.author.id} says "${message}" in ${message.channel.name}`);//logs the message, only works properly on text messages
+    }//makes it to an if so it only records message with the prefix or things the bot said, as per the request of a friend
     //splits  command to things that only 'I' can do
     if (message.author.id===config.userID){
         switch(true){//all variation of what would happen at certain prefix calls
@@ -83,6 +85,7 @@ client.on('message', message => {
         switch(true){//all variation of what would happen at certain prefix calls
             //~echo {message} -> bot sends a message as {message}
             case (message.content.startsWith(`${config.prefix}echo`)):
+                message.delete();//delete 1 message
                 var msg = message.content.slice(6);//cuts the "~echo " part
                 message.channel.send(msg);
                 break;
