@@ -5,8 +5,13 @@ const fs = require('fs');
 //import config
 var config = require('./config.json');
 //imports funcs from the said module
+/*structure of config {
+userID,botID,tokenID,prefix(prefix for calling commands through discord),
+name,quote,HNK_date_count(for daily events),
+HNK_data_type(daily events sends a file of this type),act,act_obj
+}*/
 const funcs_and_procs = require('./functions_and_procedures.js');
-const token = require('./token.json');
+const token = require('./token.json');//has the channelID that the bot is part of
 
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
@@ -33,34 +38,45 @@ client.on('message', message => {
                         msg = msg.slice(8);
                         client.user.setActivity(msg, {type : 'PLAYING'});
                         config.act = 'PLAYING';
-                        config.act_obj = msg;
                         break;
                     case(msg.startsWith('streaming')):
-                        client.user.setActivity(msg.slice(10), {type : 'STREAMING'});
+                        msg = msg.slice(10);
+                        client.user.setActivity(msg, {type : 'STREAMING'});
+                        config.act = 'STREAMING';
                         break;
                     case(msg.startsWith('listening')):
-                        client.user.setActivity(msg.slice(10), {type : 'LISTENING'});
+                        msg = msg.slice(10);
+                        client.user.setActivity(msg, {type : 'LISTENING'});
+                        config.act = 'LISTENING';
                         break;
                     case(msg.startsWith('watching')):
-                        client.user.setActivity(msg.slice(9), {type : 'WATCHING'});
+                        msg = msg.slice(9);
+                        client.user.setActivity(msg, {type : 'WATCHING'});
+                        config.act = 'WATCHING';
                         break;
                     case(msg.startsWith('competing')):
-                        client.user.setActivity(msg.slice(10), {type : 'COMPETING'});
+                        msg = msg.slice(10);
+                        client.user.setActivity(msg, {type : 'COMPETING'});
+                        config.act = 'COMPETING';
                         break;
                     default://default choice
                         client.user.setActivity('default dance', {type : 'PLAYING'});
+                        config.act = 'PLAYING';
+                        config.act_obj = 'default dance';
                         break;
                 }
+                config.act_obj = msg;//change the activity object
+                //updating json, self-reminder to perhaps change this into it's own function
+                fs.writeFile('./config.json', JSON.stringify(config), error => {
+                    if (error){
+                        console.log('Failed updating activity');//if somehow fails updating the JSON
+                    }
+                    else{
+                        console.log(config);//if succeed
+                    }
+                })
                 break;
         }
-        fs.writeFile('./config.json', JSON.stringify(config), error => {
-            if (error){
-                console.log('Failed updating activity');//if somehow fails updating the JSON
-            }
-            else{
-                console.log(config);//if succeed
-            }
-        })
     }
     //for stuffs everyone can call, but not hank itself, to avoid recursion thorugh ~echo
     if(message.author.id!==config.botID){
