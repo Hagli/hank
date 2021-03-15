@@ -97,8 +97,8 @@ client.on('message', message => {
 //and also works to ping the bot every 1 minute so it doesnt sleep, funtion somewhat relegated to dont_sleep for better consistency
 function HNK(){
     let curDate = new Date();
-    let time = curDate.getHours() + ":" + curDate.getMinutes();
-    if (time == '20:0'){//checks the time
+    let time = curDate.getHours();
+    if (time == '20'){//checks the time
         client.channels.fetch(token.channel_1).then((channel) => channel.send(`Daily Screenshot of Houseki no Kuni #${config.HNK_date_count}`, {files : [`./images/${config.HNK_date_count}${config.HNK_data_type}`]}));//sends the message
         //updating json for screenshot number
         config.HNK_date_count = parseInt(config.HNK_date_count)+1;//add 1 to HNK_date_count
@@ -112,7 +112,7 @@ function HNK(){
         })
     }
 }
-setInterval(HNK,60000);//plays HNK() every 1 minutes
+setInterval(HNK,3600000);//plays HNK() every 1 hour
 
 function dont_sleep(){
     1+1;
