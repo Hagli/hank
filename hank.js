@@ -101,19 +101,26 @@ client.on('message', message => {
                 var msg = message.content.slice(6);//cuts the "~echo " part
                 message.channel.send(msg);
                 break;
-            //~e "emoji name" -> bot sends a custom emoji that exists in the server
-            case (message.content.startsWith(`${config.prefix}e`)):
-                message.delete();//delete 1 message
+            //~e "emoji name" -> bot sends a custom emote that exists in the server
+            case (message.content.startsWith(`${config.prefix}e`)):{
                 var emj = message.content.slice(3);//cuts the "~e " part
-                const Emoji = message.guild.emojis.cache.find(emoji => emoji.name === emj);
-                var cheat = Emoji.id;
-                if(Emoji.animated){
-                    message.channel.send(`<a:${emj}:${cheat}>`); //sends an animated emoji
+                const Emoji = message.guild.emojis.cache.find(emoji => emoji.name === emj); //search the emote in the server
+                //incase the typed emote doesn't exist
+                if(Emoji==undefined){
+                    message.channel.send("Shitty ass emote dont exist dumbass"); //what an idiot
                 }
                 else{
-                    message.channel.send(`<:${emj}:${cheat}>`); //sends a non animated emoji
+                    message.delete();//delete 1 message
+                    var cheat = Emoji.id;
+                    if(Emoji.animated){
+                        message.channel.send(`<a:${emj}:${cheat}>`); //sends an animated emote
+                    }
+                    else{
+                        message.channel.send(`<:${emj}:${cheat}>`); //sends a non animated emote
+                    }
                 }
                 break;
+            }
         }
         search = /\bHank\b/;
         if(search.test(message.content)&&!(message.content.startsWith(`${config.prefix}echo`))){
