@@ -101,8 +101,21 @@ client.on('message', message => {
                 var msg = message.content.slice(6);//cuts the "~echo " part
                 message.channel.send(msg);
                 break;
+            //~e "emoji name" -> bot sends a custom emoji that exists in the server
+            case (message.content.startsWith(`${config.prefix}e`)):
+                message.delete();//delete 1 message
+                var emj = message.content.slice(3);//cuts the "~e " part
+                const Emoji = message.guild.emojis.cache.find(emoji => emoji.name === emj);
+                var cheat = Emoji.id;
+                if(Emoji.animated){
+                    message.channel.send(`<a:${emj}:${cheat}>`); //sends an animated emoji
+                }
+                else{
+                    message.channel.send(`<:${emj}:${cheat}>`); //sends a non animated emoji
+                }
+                break;
         }
-        search = /\bhank\b/i;
+        search = /\bHank\b/;
         if(search.test(message.content)&&!(message.content.startsWith(`${config.prefix}echo`))){
             message.channel.send(config.quote1);
         }
@@ -121,7 +134,7 @@ function HNK(){
     if (hour == 20){//checks the time
         client.channels.fetch(token.channel_1)
             .then((channel) => channel.send(`Daily Screenshot of Houseki no Kuni #${config.HNK_date_count}`, {files : [`./images/${config.HNK_date_count}${config.HNK_data_type}`]})//sends the message normally
-                .then(console.log("Not poiler time"), channel.send(`Daily Screenshot of Houseki no Kuni #${config.HNK_date_count}`, {files : [`./images/SPOILER_${config.HNK_date_count}${config.HNK_data_type}`]})));//sends the message, but in SPOILER
+                .then(console.log("Not spoiler time"), channel.send(`Daily Screenshot of Houseki no Kuni #${config.HNK_date_count}`, {files : [`./images/SPOILER_${config.HNK_date_count}${config.HNK_data_type}`]})));//sends the message, but in SPOILER
                 //the implementation above will always return an error statement first if the we gon send a SPOILER thingy
                 //read up on promise (maybe) to try and make a better implementation
         //updating json for screenshot number
@@ -137,12 +150,12 @@ function HNK(){
     }
 }
 setInterval(HNK,3600000);//plays HNK() every 1 hour
-
+/*
 function dont_sleep(){
-    return 0;
+    console.log("time");
 }
 setInterval(dont_sleep,1000);//plays dont_sleep every second, so the bot doesnt sleep
-
+*/
 
 
 client.login(config.tokenID);
